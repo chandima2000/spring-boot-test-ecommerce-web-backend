@@ -39,7 +39,7 @@ public class ProductController {
     public ResponseEntity<?> addProduct(@RequestPart Product product, @RequestPart MultipartFile imageFile){
         Product newProduct;
         try {
-            newProduct = productService.addProduct(product, imageFile);
+            newProduct = productService.addOrUpdateProduct(product, imageFile);
             return new ResponseEntity<>(newProduct,HttpStatus.CREATED);
         } catch (IOException e) {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
@@ -50,6 +50,18 @@ public class ProductController {
     public ResponseEntity<byte []> getImageById(@PathVariable int id){
        Product product = productService.getProductById(id);
        return new ResponseEntity<>(product.getImageData(),HttpStatus.OK);
+    }
+
+    @PutMapping("/product/{id}")
+    public ResponseEntity<?> updateProduct(@RequestPart Product product, @RequestPart MultipartFile imageFile){
+        Product updateProduct;
+        try {
+            updateProduct = productService.addOrUpdateProduct(product,imageFile);
+            return new ResponseEntity<>(updateProduct,HttpStatus.OK);
+        }
+        catch (IOException e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
     }
 
 }
